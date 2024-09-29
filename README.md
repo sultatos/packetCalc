@@ -1,12 +1,13 @@
-# Project othonas
+This is a simple package calculator demo that calculates the minimum packages required to ship the order. The BE is written in go and exposes 2 REST endpoints 
+* POST /packet :which accepts a form with a single parameter items as input and returns a json with the packets that the shipment will be send
+* POST /packet-sizes : which accepts a json with a single parameter packetSizes as input that is an array of integers of the packages
 
-One Paragraph of project description goes here
-
+* There is also a UI developed with htmx and templ just to showcase the functionality of the BE, nothing fancy.
 ## Getting Started
+Clone the repository and run the ```make run``` command to build the application. The application will be available at http://localhost:8080
+There is also a dockerfile that can be used to build the application in a container.
 
-These instructions will get you a copy of the project up and running on your local machine for development and 
-testing purposes. See deployment for notes on how to deploy the project on a live system.
-
+```bash
 ## MakeFile
 
 Run build make command with tests

@@ -1,5 +1,8 @@
 package views
-templ Home() {
+import "fmt"
+templ Home( packets *[]int) {
+
+
 <html>
 		<head>
 			<title>Pack Calculator</title>
@@ -7,6 +10,18 @@ templ Home() {
 		</head>
 		<body>
 			<h1>Pack Calculator</h1>
+            <table>
+                <tr>
+                    <th>Packet sizes</th>
+                </tr>
+                for _, i:= range *packets {
+                <tr>
+                    <td><h3>{ fmt.Sprint(i) }</h3></td>
+                </tr>
+               }
+            </table>
+            <p>Enter the number of items and we will calculate the number of packets required to pack them.</p>
+
 			<form hx-post="/packets" hx-target="#result">
                 <label for="items">Enter number of items:</label>
                 <input type="number" id="items" name="items" required>

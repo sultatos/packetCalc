@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"othonas/internal/service"
 	"othonas/internal/views"
@@ -13,12 +14,13 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /packets", s.PacketHandler)
-	mux.Handle("/", templ.Handler(views.Home()))
+	mux.HandleFunc("POST /packet-sizes", s.UpdateSizes)
+	mux.Handle("/", templ.Handler(views.Home(&s.PackSizes)))
 	return mux
 }
 
-type itemsOrder struct {
-	Items int `json:"items"`
+type packetsSizes struct {
+	PackSizes []int `json:"packSizes"`
 }
 
 // Handler function for the API
@@ -37,4 +39,16 @@ func (s *Server) PacketHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error encoding response", http.StatusInternalServerError)
 		return
 	}
+}
+
+// Handler function for the API
+func (s *Server) UpdateSizes(w http.ResponseWriter, r *http.Request) {
+	var sizes packetsSizes
+	err := json.NewDecoder(r.Body).Decode(&sizes)
+	if err != nil {
+		http.Error(w, "Invalid packet sizes", http.StatusBadRequest)
+		return
+	}
+	s.PackSizes = sizes.PackSizes
+	fmt.Println("Updated pack sizes:", s.PackSizes)
 }

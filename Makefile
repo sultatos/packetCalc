@@ -7,7 +7,7 @@ templ: templ-install
 	@templ generate
 
 build: templ
-	@go build -o main cmd/api/main.go
+	@go build -o ./bin/api cmd/api/main.go
 # Run the application
 run: templ
 	@go run cmd/api/main.go
@@ -16,7 +16,7 @@ test:
 	@go test ./... -v
 # Clean the binary
 clean:
-	@rm -f main
+	@rm -f ./bin/api
 templ-install:
 	which templ || go install github.com/a-h/templ/cmd/templ@latest
 

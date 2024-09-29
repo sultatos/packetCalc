@@ -8,7 +8,9 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Home() templ.Component {
+import "fmt"
+
+func Home(packets *[]int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +31,30 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><title>Pack Calculator</title><script src=\"https://unpkg.com/htmx.org@1.9.3\"></script></head><body><h1>Pack Calculator</h1><form hx-post=\"/packets\" hx-target=\"#result\"><label for=\"items\">Enter number of items:</label> <input type=\"number\" id=\"items\" name=\"items\" required> <button type=\"submit\">Calculate</button></form><div id=\"result\"></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<html><head><title>Pack Calculator</title><script src=\"https://unpkg.com/htmx.org@1.9.3\"></script></head><body><h1>Pack Calculator</h1><table><tr><th>Packet sizes</th></tr>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for _, i := range *packets {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr><td><h3>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(i))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/index.templ`, Line: 19, Col: 43}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h3></td></tr>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</table><p>Enter the number of items and we will calculate the number of packets required to pack them.</p><form hx-post=\"/packets\" hx-target=\"#result\"><label for=\"items\">Enter number of items:</label> <input type=\"number\" id=\"items\" name=\"items\" required> <button type=\"submit\">Calculate</button></form><div id=\"result\"></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
