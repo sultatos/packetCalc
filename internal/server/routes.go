@@ -2,26 +2,39 @@ package server
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+	"othonas/internal/service"
+	"othonas/internal/views"
+	"strconv"
+
+	"github.com/a-h/templ"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
-
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", s.HelloWorldHandler)
-
+	mux.HandleFunc("POST /packets", s.PacketHandler)
+	mux.Handle("/", templ.Handler(views.Home()))
 	return mux
 }
 
-func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
+type itemsOrder struct {
+	Items int `json:"items"`
+}
 
-	jsonResp, err := json.Marshal(resp)
+// Handler function for the API
+func (s *Server) PacketHandler(w http.ResponseWriter, r *http.Request) {
+	packetSize, err := strconv.Atoi(r.FormValue("items"))
 	if err != nil {
-		log.Fatalf("error handling JSON marshal. Err: %v", err)
+		http.Error(w, "Invalid items size", http.StatusBadRequest)
+		return
 	}
-
-	_, _ = w.Write(jsonResp)
+	// Calculate the optimal pack distribution
+	packDistribution := service.CalculatePacks(packetSize, s.PackSizes)
+	// Convert the result to JSON and send it back to the client
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(packDistribution)
+	if err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+		return
+	}
 }

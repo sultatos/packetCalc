@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"othonas/internal/service"
+	"sort"
 	"strconv"
 	"time"
 
@@ -11,14 +13,19 @@ import (
 )
 
 type Server struct {
-	port int
+	port      int
+	PackSizes []int `json:"pack_sizes"`
 }
 
 func NewServer() *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		port: port,
+		port:      port,
+		PackSizes: service.LoadPackSizesFromFile("pack_sizes.json"),
 	}
+	sort.Slice(NewServer.PackSizes, func(i, j int) bool {
+		return NewServer.PackSizes[i] > NewServer.PackSizes[j]
+	})
 
 	// Declare Server config
 	server := &http.Server{
