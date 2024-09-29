@@ -22,3 +22,6 @@ templ-install:
 
 image: build test
 	@docker build -t go-api .
+
+docker-run:
+	@docker run -p 8080:8080  go-api
